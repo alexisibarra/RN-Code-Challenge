@@ -2,15 +2,15 @@ import {createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 
 import {CocktailDetail} from '../Screens/CocktailDetail/CocktailDetail';
-import {CocktailsList} from '../Screens/CocktailsList/CocktailsList';
+import CocktailsList from '../Screens/CocktailsList/CocktailsList';
 
 const Navigation = createStackNavigator(
   {
-    Home: CocktailsList,
-    Details: CocktailDetail,
+    CocktailsList,
+    CocktailDetail,
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'CocktailsList',
     defaultNavigationOptions: {
       headerStyle: {
         backgroundColor: '#4dbcd0',

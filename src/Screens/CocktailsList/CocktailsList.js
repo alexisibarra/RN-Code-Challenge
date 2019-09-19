@@ -14,7 +14,7 @@ import {
 
 import {CocktailPreview} from '../../Components/CocktailPreview/CocktailPreview';
 import {Spinner} from 'native-base';
-import CustomHeader from './CustomHeader';
+import CustomHeader from '../../Components/CustomHeader/CustomHeader';
 
 class CocktailsList extends Component {
   static navigationOptions = ({navigation}) => {

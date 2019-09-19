@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import styles from './CocktailDetail.styles';
-import CustomHeader from '../CocktailsList/CustomHeader';
+import CustomHeader from '../../Components/CustomHeader/CustomHeader';
 
 class CocktailDetail extends Component {
   static navigationOptions = ({navigation}) => {

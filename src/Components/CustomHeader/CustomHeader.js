@@ -16,6 +16,8 @@ import PropTypes from 'prop-types';
 
 import {update} from '../../Ducks/CocktailsReducer/CocktailsReducer';
 
+import styles from './CustomHeader.styles';
+
 class CustomHeader extends Component {
   state = {
     showSearchBar: false,
@@ -32,7 +34,7 @@ class CustomHeader extends Component {
     const {showSearchBar} = this.state;
 
     return (
-      <View style={{backgroundColor: '#4dbcd0'}}>
+      <View style={styles.wrapper}>
         {showSearchBar ? (
           <Header transparent searchBar rounded autoCorrect={false}>
             <Item transparent>
@@ -42,7 +44,10 @@ class CustomHeader extends Component {
                 placeholder="Search"
               />
               <Icon
-                onPress={() => this.setState({showSearchBar: false})}
+                onPress={() => {
+                  this.setState({showSearchBar: false});
+                  update({searchInput: ''});
+                }}
                 name="close"
               />
             </Item>
@@ -54,20 +59,19 @@ class CustomHeader extends Component {
                 <Button
                   transparent
                   onPress={() => {
-                    console.log('object');
                     goBack();
                   }}>
-                  <Icon style={{color: 'white'}} name="md-arrow-back" />
+                  <Icon style={styles.icon} name="md-arrow-back" />
                 </Button>
               </Left>
             )}
             <Body>
-              <Title>{title}</Title>
+              <Title style={styles.title}>{title}</Title>
             </Body>
             {!noSearch && (
               <Right>
                 <Icon
-                  style={{color: 'white'}}
+                  style={styles.icon}
                   onPress={() => this.setState({showSearchBar: true})}
                   name="search"
                 />

@@ -1,7 +1,7 @@
 import {createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 
-import {CocktailDetail} from '../Screens/CocktailDetail/CocktailDetail';
+import CocktailDetail from '../Screens/CocktailDetail/CocktailDetail';
 import CocktailsList from '../Screens/CocktailsList/CocktailsList';
 
 const Navigation = createStackNavigator(

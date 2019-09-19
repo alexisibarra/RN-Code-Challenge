@@ -2,8 +2,8 @@ import CocktailsAPI from '../../API/CocktailsAPI';
 
 // Constants
 export const ACTIONS = {
-  CLEAR: 'auth/CLEAR',
-  UPDATE: 'auth/UPDATE',
+  CLEAR: 'COCKTAILS/CLEAR',
+  UPDATE: 'COCKTAILS/UPDATE',
 };
 
 // Actions
@@ -19,16 +19,61 @@ export const clear = _ => ({
 export const listCocktails = () => async dispatch => {
   const response = await CocktailsAPI.list();
 
-  dispatch(update({all: response.data.drinks}));
+  const all = response.data.drinks.reduce(
+    (acc, cocktail) => ({...acc, [cocktail.idDrink]: cocktail}),
+    {},
+  );
+
+  dispatch(update({all}));
 };
 
-export const logout = _ => dispatch => {
-  return dispatch(clear());
+export const getCocktailDetails = cocktailId => async (dispatch, getState) => {
+  const response = await CocktailsAPI.get(cocktailId);
+  const cocktail = response.data.drinks[0];
+  const allCocktails = getState().cocktails.all;
+
+  let readIngredients = true;
+  const maxNumIngredients = 15;
+  let currentIngredientsPosition = 1;
+
+  cocktail.ingredients = [];
+
+  while (readIngredients && currentIngredientsPosition <= maxNumIngredients) {
+    if (cocktail[`strIngredient${currentIngredientsPosition}`]) {
+      cocktail.ingredients.push({
+        name: cocktail[`strIngredient${currentIngredientsPosition}`],
+        measure: cocktail[`strMeasure${currentIngredientsPosition}`],
+      });
+    } else {
+      readIngredients = false;
+    }
+
+    currentIngredientsPosition++;
+  }
+
+  dispatch(
+    update({
+      all: {
+        ...allCocktails,
+        [cocktail.idDrink]: {
+          ...allCocktails[cocktail.idDrink],
+          ...cocktail,
+        },
+      },
+    }),
+  );
 };
+
+export const getCocktailsDetails = (start, end) => async (dispatch, getState) =>
+  Object.keys(getState().cocktails.all)
+    .slice(start, end)
+    .forEach(cocktailId => {
+      dispatch(getCocktailDetails(cocktailId));
+    });
 
 const initialState = {
-  all: [],
-  current: {},
+  all: {},
+  currentId: -1,
 };
 
 const CocktailsReducers = (state = initialState, action) => {

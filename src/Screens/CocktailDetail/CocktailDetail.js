@@ -1,33 +1,82 @@
 import React, {Component} from 'react';
-import {Button, View, Text} from 'react-native';
 
+import {Card, CardItem} from 'native-base';
+import {Text, ScrollView, Image, View} from 'react-native';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-export class CocktailDetail extends Component {
-  render() {
+import styles from './CocktailDetail.styles';
+
+class CocktailDetail extends Component {
+  static navigationOptions = ({navigation}) => {
+    return {
+      title: navigation.getParam('title', 'Cocktail Details'),
+    };
+  };
+
+  componentDidMount() {
     const {
-      navigation: {push, navigate, goBack},
+      navigation: {setParams},
+      cocktailsList,
+      currentId,
     } = this.props;
 
-    return (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Text>Details Screen</Text>
+    setParams({
+      title: cocktailsList[currentId].strDrink,
+    });
+  }
 
-        <Button
-          title="Go to Details... again"
-          onPress={() => push('Details')}
-        />
-        <Button title="Go to Home" onPress={() => navigate('Home')} />
-        <Button title="Go back" onPress={() => goBack()} />
-      </View>
+  render() {
+    const {cocktailsList, currentId} = this.props;
+
+    const {strInstructions, strDrinkThumb, ingredients} = cocktailsList[
+      currentId
+    ];
+
+    return (
+      <ScrollView style={styles.scrollView}>
+        <Card>
+          <CardItem cardBody style={styles.imageContainer}>
+            <Image source={{uri: strDrinkThumb}} style={styles.image} />
+          </CardItem>
+          <CardItem>
+            <View style={styles.textBlock}>
+              {ingredients &&
+                ingredients.map(({measure, name}) => (
+                  <Text style={styles.text} key={name}>
+                    {`${measure} - ${name}`}
+                  </Text>
+                ))}
+            </View>
+          </CardItem>
+          <CardItem>
+            <View>
+              <Text style={styles.text}>{'\u2022'} How to Prepare</Text>
+              <Text style={styles.text}>{strInstructions}</Text>
+            </View>
+          </CardItem>
+        </Card>
+      </ScrollView>
     );
   }
 }
 
 CocktailDetail.propTypes = {
+  cocktailsList: PropTypes.object.isRequired,
+  currentId: PropTypes.string.isRequired,
   navigation: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-    navigate: PropTypes.func.isRequired,
-    goBack: PropTypes.func.isRequired,
+    setParams: PropTypes.func.isRequired,
   }),
 };
+
+const mS = state => ({
+  cocktailsList: state.cocktails.all,
+  currentId: state.cocktails.currentId,
+});
+
+const mD = {};
+
+export default connect(
+  mS,
+  mD,
+)(CocktailDetail);

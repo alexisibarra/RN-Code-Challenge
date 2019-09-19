@@ -41,11 +41,12 @@ class CocktailDetail extends Component {
           </CardItem>
           <CardItem>
             <View style={styles.textBlock}>
-              {ingredients.map(({measure, name}) => (
-                <Text style={styles.text} key={name}>
-                  {`${measure} - ${name}`}
-                </Text>
-              ))}
+              {ingredients &&
+                ingredients.map(({measure, name}) => (
+                  <Text style={styles.text} key={name}>
+                    {`${measure} - ${name}`}
+                  </Text>
+                ))}
             </View>
           </CardItem>
           <CardItem>

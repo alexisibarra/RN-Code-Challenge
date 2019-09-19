@@ -74,6 +74,7 @@ export const getCocktailsDetails = (start, end) => async (dispatch, getState) =>
 const initialState = {
   all: {},
   currentId: -1,
+  searchInput: '',
 };
 
 const CocktailsReducers = (state = initialState, action) => {

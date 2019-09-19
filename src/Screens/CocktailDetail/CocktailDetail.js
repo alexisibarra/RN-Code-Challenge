@@ -6,11 +6,20 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import styles from './CocktailDetail.styles';
+import CustomHeader from '../CocktailsList/CustomHeader';
 
 class CocktailDetail extends Component {
   static navigationOptions = ({navigation}) => {
     return {
-      title: navigation.getParam('title', 'Cocktail Details'),
+      title: 'Random drinks 0.1',
+      header: (
+        <CustomHeader
+          title={navigation.getParam('title', 'Cocktail Details')}
+          noSearch
+          showBack
+          navigation={navigation}
+        />
+      ),
     };
   };
 

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {FlatList, ScrollView, View, Text} from 'react-native';
-import {Button} from 'native-base';
+import {Button, Col, Grid, Left} from 'native-base';
 import {connect} from 'react-redux';
 
 import PropTypes from 'prop-types';
@@ -14,16 +14,23 @@ import {
 
 import {CocktailPreview} from '../../Components/CocktailPreview/CocktailPreview';
 import {Spinner} from 'native-base';
+import CustomHeader from './CustomHeader';
 
 class CocktailsList extends Component {
-  static navigationOptions = {
-    title: 'Random drinks 0.1',
+  static navigationOptions = ({navigation}) => {
+    return {
+      title: 'Random drinks 0.1',
+      header: (
+        <CustomHeader title="Random drinks 0.1" navigation={navigation} />
+      ),
+    };
   };
 
   state = {
     loadingTransactions: true,
     itemsToRender: 10,
     loads: 1,
+    showSearchBar: false,
   };
 
   async componentDidMount() {
@@ -74,33 +81,43 @@ class CocktailsList extends Component {
   };
 
   render() {
-    const {cocktailsList} = this.props;
+    const {cocktailsList, searchInput} = this.props;
 
     const {loadingTransactions, itemsToRender, loads} = this.state;
 
     const endOfList = itemsToRender * loads;
-    const listData = Object.values(cocktailsList).slice(0, endOfList);
-    const listLength = Object.values(cocktailsList).length;
+
+    const list = Object.values(cocktailsList);
+
+    const listData = list
+      .filter(cocktail => cocktail.strDrink.includes(searchInput))
+      .slice(0, endOfList);
+
+    const listLength = list.length;
+
     const moreToLoad = endOfList < listLength;
+
     return (
-      <ScrollView style={styles.scrollView}>
-        <>
-          <FlatList
-            data={listData}
-            renderItem={this.renderCocktailPreview}
-            keyExtractor={cocktail => cocktail.idDrink}
-            removeClippedSubviews
-          />
+      <>
+        <ScrollView style={styles.scrollView}>
+          <>
+            <FlatList
+              data={listData}
+              renderItem={this.renderCocktailPreview}
+              keyExtractor={cocktail => cocktail.idDrink}
+              removeClippedSubviews
+            />
 
-          {loadingTransactions && <Spinner color="white" />}
+            {loadingTransactions && <Spinner color="white" />}
 
-          {moreToLoad && (
-            <Button block light onPress={this.loadMore}>
-              <Text>LOAD MORE</Text>
-            </Button>
-          )}
-        </>
-      </ScrollView>
+            {moreToLoad && (
+              <Button block light onPress={this.loadMore}>
+                <Text>LOAD MORE</Text>
+              </Button>
+            )}
+          </>
+        </ScrollView>
+      </>
     );
   }
 }
@@ -110,6 +127,7 @@ CocktailsList.propTypes = {
   getCocktailsDetails: PropTypes.func.isRequired,
   update: PropTypes.func.isRequired,
   listCocktails: PropTypes.func.isRequired,
+  searchInput: PropTypes.string.isRequired,
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
     push: PropTypes.func.isRequired,
@@ -117,6 +135,8 @@ CocktailsList.propTypes = {
 };
 
 const mS = state => ({
+  state,
+  searchInput: state.cocktails.searchInput,
   cocktailsList: state.cocktails.all,
 });
 

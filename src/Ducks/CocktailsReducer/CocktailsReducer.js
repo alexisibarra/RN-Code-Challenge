@@ -51,6 +51,8 @@ export const getCocktailDetails = cocktailId => async (dispatch, getState) => {
     currentIngredientsPosition++;
   }
 
+  cocktail.metaLoaded = true;
+
   dispatch(
     update({
       all: {
@@ -63,13 +65,6 @@ export const getCocktailDetails = cocktailId => async (dispatch, getState) => {
     }),
   );
 };
-
-export const getCocktailsDetails = (start, end) => async (dispatch, getState) =>
-  Object.keys(getState().cocktails.all)
-    .slice(start, end)
-    .forEach(cocktailId => {
-      dispatch(getCocktailDetails(cocktailId));
-    });
 
 const initialState = {
   all: {},

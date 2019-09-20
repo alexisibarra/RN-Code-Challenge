@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import {FlatList, ScrollView, View, Text} from 'react-native';
-import {Button, Col, Grid, Left} from 'native-base';
+import {FlatList, ScrollView, Text} from 'react-native';
+import {Button} from 'native-base';
 import {connect} from 'react-redux';
 
 import PropTypes from 'prop-types';
@@ -8,11 +8,10 @@ import PropTypes from 'prop-types';
 import styles from './CocktailsList.styles';
 import {
   listCocktails,
-  getCocktailsDetails,
   update,
 } from '../../Ducks/CocktailsReducer/CocktailsReducer';
 
-import {CocktailPreview} from '../../Components/CocktailPreview/CocktailPreview';
+import CocktailPreview from '../../Components/CocktailPreview/CocktailPreview';
 import {Spinner} from 'native-base';
 import CustomHeader from '../../Components/CustomHeader/CustomHeader';
 
@@ -34,14 +33,9 @@ class CocktailsList extends Component {
   };
 
   async componentDidMount() {
-    const {getCocktailsDetails, listCocktails} = this.props;
-    const {itemsToRender, loads} = this.state;
-
-    const start = (loads - 1) * itemsToRender;
-    const end = loads * itemsToRender;
+    const {listCocktails} = this.props;
 
     await listCocktails();
-    await getCocktailsDetails(start, end);
 
     this.setState({loadingTransactions: false});
   }
@@ -58,24 +52,16 @@ class CocktailsList extends Component {
 
   renderCocktailPreview = ({item}) => (
     <CocktailPreview
-      cocktail={item}
+      cocktailId={item.idDrink}
       navigate={this.props.navigation.navigate}
       onPress={this.onCocktrailPress}
     />
   );
 
   loadMore = async () => {
-    const {getCocktailsDetails} = this.props;
     const {loads} = this.state;
 
     this.setState({loads: loads + 1, loadingTransactions: true}, async () => {
-      const {loads, itemsToRender} = this.state;
-
-      const start = (loads - 1) * itemsToRender;
-      const end = loads * itemsToRender;
-
-      await getCocktailsDetails(start, end);
-
       this.setState({loadingTransactions: false});
     });
   };
@@ -124,7 +110,6 @@ class CocktailsList extends Component {
 
 CocktailsList.propTypes = {
   cocktailsList: PropTypes.object.isRequired,
-  getCocktailsDetails: PropTypes.func.isRequired,
   update: PropTypes.func.isRequired,
   listCocktails: PropTypes.func.isRequired,
   searchInput: PropTypes.string.isRequired,
@@ -141,7 +126,6 @@ const mS = state => ({
 });
 
 const mD = {
-  getCocktailsDetails,
   listCocktails,
   update,
 };

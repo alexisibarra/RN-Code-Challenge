@@ -87,6 +87,13 @@ class CocktailsList extends Component {
       <>
         <ScrollView style={styles.scrollView}>
           <>
+            <Button
+              block
+              light
+              onPress={() => this.props.navigation.navigate('Favorites')}>
+              <Text>Favorites</Text>
+            </Button>
+
             <FlatList
               data={listData}
               renderItem={this.renderCocktailPreview}

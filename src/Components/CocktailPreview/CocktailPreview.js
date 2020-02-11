@@ -1,10 +1,13 @@
 import React, {Component} from 'react';
 import {View, Image, TouchableOpacity} from 'react-native';
-import {Card, CardItem, Body, Text, Grid, Col} from 'native-base';
+import {Card, CardItem, Body, Text, Grid, Col, Button} from 'native-base';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
-import {getCocktailDetails} from '../../Ducks/CocktailsReducer/CocktailsReducer';
+import {
+  getCocktailDetails,
+  addToFavorites,
+} from '../../Ducks/CocktailsReducer/CocktailsReducer';
 import styles from './CocktailPreview.styles';
 
 class CocktailPreview extends Component {
@@ -19,7 +22,13 @@ class CocktailPreview extends Component {
   }
 
   render() {
-    const {cocktailsList, cocktailId, onPress} = this.props;
+    const {
+      addToFavorites,
+      cocktailsList,
+      cocktailId,
+      onPress,
+      navigate,
+    } = this.props;
 
     const {
       idDrink,
@@ -76,16 +85,22 @@ class CocktailPreview extends Component {
             </CardItem>
           </Card>
         </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => addToFavorites(cocktailId)}>
+          <Text>Add to favorite</Text>
+        </TouchableOpacity>
       </View>
     );
   }
 }
 
 CocktailPreview.propTypes = {
+  addToFavorites: PropTypes.func.isRequired,
   cocktailId: PropTypes.string.isRequired,
   cocktailsList: PropTypes.object.isRequired,
   getCocktailDetails: PropTypes.func.isRequired,
   onPress: PropTypes.func.isRequired,
+  navigate: PropTypes.func.isRequired,
 };
 
 const mS = state => ({
@@ -94,6 +109,7 @@ const mS = state => ({
 
 const mD = {
   getCocktailDetails,
+  addToFavorites,
 };
 
 export default connect(

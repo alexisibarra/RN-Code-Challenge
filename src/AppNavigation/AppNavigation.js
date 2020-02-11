@@ -3,11 +3,13 @@ import {createStackNavigator} from 'react-navigation-stack';
 
 import CocktailDetail from '../Screens/CocktailDetail/CocktailDetail';
 import CocktailsList from '../Screens/CocktailsList/CocktailsList';
+import Favorites from '../Screens/Favorites/Favorites';
 
 const Navigation = createStackNavigator(
   {
     CocktailsList,
     CocktailDetail,
+    Favorites,
   },
   {
     initialRouteName: 'CocktailsList',
